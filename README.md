@@ -1,3 +1,4 @@
 # whaleAlert
 
-npm src/index.js
+yarn
+yarn start
