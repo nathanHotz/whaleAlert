@@ -7,14 +7,18 @@ const whaleTracker = new Map();
 const getWhaleAlerts = () => {
   return new Promise(async (res) => {
     const url = `https://api.whale-alert.io/v1/transactions?start=${TEN_SECONDS_AGO}&min_value=5000000`;
-    const resp = await fetch(url, {
-      headers: {
-        "X-WA-API-KEY": process.env.WHALE_ALERT_API,
-      },
-    });
+    try {
+      const resp = await fetch(url, {
+        headers: {
+          "X-WA-API-KEY": process.env.WHALE_ALERT_API,
+        },
+      });
 
-    const body = await resp.text();
-    res(JSON.parse(body));
+      const body = await resp.text();
+      res(JSON.parse(body));
+    } catch (e) {
+      res({});
+    }
   });
 };
 

@@ -15,7 +15,7 @@ const webhookClient = new Discord.WebhookClient(
 const logger = winston.createLogger({
   level: "info",
   format: winston.format.json(),
-  defaultMeta: { service: "user-service" },
+  defaultMeta: { service: "whaleAlert" },
   transports: [
     new winston.transports.File({ filename: "combined.log", maxsize: 1000000 }),
   ],
@@ -32,6 +32,9 @@ if (process.env.NODE_ENV !== "production") {
 const main = async () => {
   const spottedWhales = await getWhaleAlerts();
 
+  logger.info(`Response: `);
+  console.log(spottedWhales);
+
   logger.info(
     `Spotted ${
       spottedWhales.transactions ? spottedWhales.transactions.length : 0
@@ -40,7 +43,11 @@ const main = async () => {
 
   const newWhales = filterWhales(spottedWhales);
 
+  logger.info(`${newWhales.length} found in the spotted whales`);
+
   for (whale of newWhales) {
+    logger.info(`Sending Discord homies whale info`);
+    console.log(whale);
     await sendDiscordMessage(webhookClient, whale);
   }
 };
